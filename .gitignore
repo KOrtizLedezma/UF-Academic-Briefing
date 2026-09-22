@@ -1,0 +1,44 @@
+# UF Academic Briefing — personal data and local output
+# A Canvas subscription URL grants access to your private calendar.
+# Downloaded calendars may include course details and meeting passcodes.
+*.ics
+*.ical
+*.ifb
+*.ics.gz
+
+# Secrets, credentials, and machine-specific configuration
+.env
+.env.*
+!.env.example
+.aws/
+*.pem
+*.key
+samconfig.toml
+samconfig.*.toml
+
+# AWS SAM builds and local test results
+.aws-sam/
+response.json
+response*.json
+preview.html
+*.log
+
+# Python caches, virtual environments, and coverage
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+env/
+
+# Local IDE / OS files and packaged archives
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.zip

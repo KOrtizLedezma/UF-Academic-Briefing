@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: Daily UF Canvas iCal academic briefing through AWS Lambda and SES.
 
@@ -8,7 +8,7 @@ Parameters:
     Description: SES-verified email, used as both sender and recipient.
   SelectedCourseIds:
     Type: String
-    Default: '580049,573643,566428'
+    Default: "580049,573643,566428"
     Description: Comma-separated UF Canvas course IDs.
   DaysAhead:
     Type: Number
@@ -29,7 +29,7 @@ Resources:
       Timeout: 30
       Environment:
         Variables:
-          CANVAS_FEED_PARAMETER: '/uf-academic-briefing/calendar-url'
+          CANVAS_FEED_PARAMETER: "/uf-academic-briefing/calendar-url"
           EMAIL_ADDRESS: !Ref EmailAddress
           COURSE_IDS: !Ref SelectedCourseIds
           DAYS_AHEAD: !Ref DaysAhead
@@ -38,18 +38,18 @@ Resources:
         - Statement:
             - Effect: Allow
               Action: ssm:GetParameter
-              Resource: !Sub 'arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/uf-academic-briefing/calendar-url'
+              Resource: !Sub "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/uf-academic-briefing/calendar-url"
             - Effect: Allow
               Action: ses:SendEmail
-              Resource: !Sub 'arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${EmailAddress}'
+              Resource: !Sub "arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${EmailAddress}"
       Events:
         DailyAtEight:
           Type: ScheduleV2
           Properties:
-            ScheduleExpression: 'cron(0 8 * * ? *)'
+            ScheduleExpression: "cron(0 8 * * ? *)"
             ScheduleExpressionTimezone: America/New_York
             FlexibleTimeWindow:
-              Mode: 'OFF'
+              Mode: "OFF"
             RetryPolicy:
               MaximumRetryAttempts: 0
               MaximumEventAgeInSeconds: 3600
@@ -58,7 +58,7 @@ Resources:
   BriefingLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub '/aws/lambda/${BriefingFunction}'
+      LogGroupName: !Sub "/aws/lambda/${BriefingFunction}"
       RetentionInDays: 7
 
 Outputs:

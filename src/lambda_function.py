@@ -1,4 +1,3 @@
-"""Lambda: fetch a private Canvas feed and email a filtered daily briefing."""
 import os
 from datetime import datetime
 from urllib.error import HTTPError, URLError
@@ -28,7 +27,6 @@ def fetch_feed(feed_url: str) -> bytes:
 
 
 def lambda_handler(event, context):
-    # Import here: the included Lambda Python runtime provides boto3.
     import boto3
 
     ssm = boto3.client("ssm")

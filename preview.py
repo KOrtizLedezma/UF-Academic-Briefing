@@ -18,7 +18,7 @@ def main() -> None:
         raise SystemExit("Usage: python preview.py downloaded-calendar.ics [YYYY-MM-DD]")
     path = Path(sys.argv[1])
     now = (datetime.fromisoformat(sys.argv[2]).replace(hour=8, tzinfo=ZoneInfo("America/New_York"))
-           if len(sys.argv) == 3 else datetime.now(ZoneInfo("America/New_York")))
+        if len(sys.argv) == 3 else datetime.now(ZoneInfo("America/New_York")))
     parsed = parse_assignments(path.read_bytes(), COURSES)
     due = upcoming(parsed, now, 7)
     _, html_body, text_body = render_email(due, now, 7)

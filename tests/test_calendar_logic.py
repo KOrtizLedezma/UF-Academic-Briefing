@@ -58,8 +58,7 @@ class CalendarTests(unittest.TestCase):
     def test_timezone_and_inclusion(self):
         self.assertEqual(len(upcoming(self.items, self.now, 7)), 2)
         self.assertEqual(len(upcoming(self.items, self.now, 1)), 1)
-        self.assertEqual(len(upcoming(self.items, datetime(2026, 9, 23, 15,
-                         tzinfo=ZoneInfo("America/New_York")), 7)), 1)
+        self.assertEqual(len(upcoming(self.items, datetime(2026, 9, 23, 15, tzinfo=ZoneInfo("America/New_York")), 7)), 1)
 
     def test_date_only_and_email(self):
         _, html, plain = render_email(self.items, self.now, 7)

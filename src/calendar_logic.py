@@ -156,7 +156,7 @@ def render_email(assignments: list[Assignment], now: datetime, days_ahead: int) 
         rows_html.append('<p>No listed assignment deadlines in this window.</p>')
         rows_text.append("No listed assignment deadlines in this window.")
     caution = ("The Canvas iCal feed does not show submission status. "
-               "For date-only items, verify the exact submission cutoff in Canvas.")
+        "For date-only items, verify the exact submission cutoff in Canvas.")
     html_body = (
         '<!doctype html><html><body style="margin:0;background:#f3f6fa;'
         'font-family:Arial,Helvetica,sans-serif;color:#15243a">'
@@ -169,5 +169,5 @@ def render_email(assignments: list[Assignment], now: datetime, days_ahead: int) 
         '</main></body></html>'
     )
     text_body = (f"{subject}\n{len(assignments)} listed deadline(s) today + next {days_ahead} days\n"
-                 + "\n".join(rows_text) + f"\n\n{caution}\n")
+        + "\n".join(rows_text) + f"\n\n{caution}\n")
     return subject, html_body, text_body
