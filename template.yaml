@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Daily UF Canvas iCal academic briefing through AWS Lambda and SES.
+
+Parameters:
+  EmailAddress:
+    Type: String
+    Description: SES-verified email, used as both sender and recipient.
+  SelectedCourseIds:
+    Type: String
+    Default: '580049,573643,566428'
+    Description: Comma-separated UF Canvas course IDs.
+  DaysAhead:
+    Type: Number
+    Default: 7
+    MinValue: 0
+    MaxValue: 365
+    Description: Include today and this many following calendar days.
+
+Resources:
+  BriefingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.12
+      Architectures: [x86_64]
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          CANVAS_FEED_PARAMETER: '/uf-academic-briefing/calendar-url'
+          EMAIL_ADDRESS: !Ref EmailAddress
+          COURSE_IDS: !Ref SelectedCourseIds
+          DAYS_AHEAD: !Ref DaysAhead
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Statement:
+            - Effect: Allow
+              Action: ssm:GetParameter
+              Resource: !Sub 'arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/uf-academic-briefing/calendar-url'
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: !Sub 'arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/${EmailAddress}'
+      Events:
+        DailyAtEight:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: 'cron(0 8 * * ? *)'
+            ScheduleExpressionTimezone: America/New_York
+            FlexibleTimeWindow:
+              Mode: 'OFF'
+            RetryPolicy:
+              MaximumRetryAttempts: 0
+              MaximumEventAgeInSeconds: 3600
+            Description: Email daily course assignment briefing at 8 AM Eastern.
+
+  BriefingLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${BriefingFunction}'
+      RetentionInDays: 7
+
+Outputs:
+  LambdaFunctionName:
+    Description: Use this to trigger a manual test.
+    Value: !Ref BriefingFunction
