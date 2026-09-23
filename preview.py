@@ -4,7 +4,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
-from calendar_logic import parse_assignments, render_email, upcoming  # noqa: E402
+from calendar_logic import parse_assignments, render_email, upcoming
 
 COURSES = {
     "580049": "COP5615 — Distributed Operating Systems",
